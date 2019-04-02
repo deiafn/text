@@ -69,23 +69,53 @@ router.post('/selectUser', (req,res) => {
     })
 });
 router.post('/selectType',(req,res) => {
-	var sql_type=$sql.city.select_type;
     var params = req.body;
-	conn.query(sql_type,function(err,data){
+	conn.query('SELECT * from type',function(err,result){
 		if(err) {
             console.log(err)
         }
-		res.json({cont:data})
+		if(result[0]===undefined) {
+        res.send('0')
+      }else {
+        res.send(result)
+      }
 	});
 });
 router.post('/selectTool',(req,res) => {
-	var sql=$sql.tool.select_tool;
-    var params = req.body;
-	conn.query(sql,function(err,results){
+	conn.query('select * from tool',function(err,result){
 		if(err) {
             console.log(err)
         }
-		res.json({message: results})
+		if(result[0]===undefined) {
+        res.send('0')
+      }else {
+        res.send(result)
+      }
+	});
+});
+router.post('/selectIntroduce',(req,res) => {
+	conn.query('select * from introduce',function(err,result){
+		if(err) {
+            console.log(err)
+        }
+		if(result[0]===undefined) {
+        res.send('0')
+      }else {
+        res.send(result)
+      }
+	});
+});
+router.post('/selectDetails',(req,res) => {
+    var params = req.body;
+	conn.query('SELECT * FROM introduce WHERE id=?',params.id,function(err,result){
+		if(err) {
+            console.log(err)
+        }
+		if(result[0]===undefined) {
+        res.send('0')
+      }else {
+        res.send(result)
+      }
 	});
 });
 module.exports = router;

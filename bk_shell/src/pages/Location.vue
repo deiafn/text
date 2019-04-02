@@ -1,6 +1,6 @@
 <template>
-  <div>
-  	<div class="ss"><router-link to="/"><span><img src="../assets/登录注册/8.gif"></span></router-link>
+  <div class="in">
+  	<div class="ss"><router-link to="/"><span><img src="../assets/login/8.gif"></span></router-link>
   		<input placeholder="请输入城市名称"></div>
   	<div class="in_1">
   		<div class="yes_1">国内城市</div>
@@ -28,7 +28,7 @@
   	<div class="in_5">
   		<ul>
   			<li>#</li>
-  			<li v-for="(item,key) of cities" :key="key">{{key}}</li>
+  			<li v-for="iteme in types" :key="iteme.Cityid">{{iteme.type}}</li>
   		</ul>
   	</div>
   </div>
@@ -42,14 +42,17 @@ export default {
     return {
       cities: {},
       hotCities: [],
-      types: []
+      types: {}
     }
   },
 	methods:{
+		clickLocation(e){
+			this.$emit('change',e.target.innerText)
+		},
 		postLocation(){
 			axios.post('/api/user/selectType').then((res) => {
         console.log(res)
-        this.types = res.data
+        this.types = (res.data)
 			})
 		},
 		getLocation(){
@@ -75,6 +78,9 @@ a{
 		color: #2C3E50;
 	text-decoration: none;
 }
+.in{
+	background: #FFFFFF;
+}
 .ss{
 	padding: 13px 0;
 }
@@ -88,7 +94,7 @@ a{
 	border: 0;
 	text-indent: 62px;
 	border-radius: 50px;
-	background: url(../assets/登录注册/9.gif) left 30px center #f8f8f9 no-repeat;
+	background: url(../assets/login/9.gif) left 30px center #f8f8f9 no-repeat;
 	background-size: 25px;
 	width: 612px;
 }
@@ -101,7 +107,7 @@ a{
 	color: #9096a2;
 }
 .yes_1{
-	background: url(../assets/登录注册/7.gif) bottom 9px center no-repeat;
+	background: url(../assets/login/7.gif) bottom 9px center no-repeat;
 	background-size: 22px;
 	color: #000000;
 }
@@ -129,7 +135,6 @@ a{
 }
 .in_3{
 	float: left;
-	background: #f8f8f9;
 	padding-left: 48px;
 	width: 702px;
 	font-size: 22px;
@@ -150,6 +155,7 @@ a{
 	padding: 0 0 0 46px;
 	border-bottom: 1px solid #e4e6f0;
 	border-top: 1px solid #e4e6f0;
+	background: #FFFFFF;
 }
 .in_4 li{
 	list-style-type: none;

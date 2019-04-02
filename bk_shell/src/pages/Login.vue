@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div class="in">
   	<div class="in_1">
-  		<div><img src="../assets/登录注册/31.gif"></div>
-  		<div class="in_12"></div>
+  		<div><router-link to="/Individual"><img src="../assets/login/31.gif"></router-link></div>
+  		<div class="in_12">{{userHide}}</div>
   		<div class="in_13"><router-link to="/register">注册</router-link></div>
   	</div>
   	<div class="in_2">
-  		<div class="in_21">账号密码登录</div>
+  		<div class="in_21">{{userShow}}</div>
   		<form>
-  		<input type="number" placeholder="请输入手机号" v-model="userPhone">
+  		<input @click="userCm" type="number" placeholder="请输入手机号" v-model="userPhone">
   		<input type="password" placeholder="请输入密码" v-model="userPass">
   		<div class="in_23"><input type="submit" @click="addUser" value="登录"></div>
   		</form>
@@ -25,11 +25,17 @@
 export default {
   data () {
     return {
+    	userHide:'',
+    	userShow:'账号密码登录',
       userPhone: '',
       userPass: ''
     }
   },
   methods: {
+  	userCm:function(){
+  			this.userHide="账号密码登录",
+  			this.userShow=""
+  	},
   	addUser:function () {
       var regPhone = /^1(3|5|8)\d{9}$/;
       var regAge = /^[a-zA-Z0-9]{8,16}$/;
@@ -51,7 +57,14 @@ export default {
               this.showTishi = true
             }else{
   						alert("登录成功");
-  						this.$router.push({path:'/Individual'})
+				sessionStorage.setItem('sid', res.data.id); // 设置本地存储信息
+				this.$router.push(this.$router.push({
+  							path:'/hideIndividual',
+  							query:{
+  								code:''+this.userPhone+''
+  							}
+  						}));
+  						
             }
       		})
   		}
@@ -63,6 +76,10 @@ export default {
 a{
 		color: #2C3E50;
 	text-decoration: none;
+}
+.in{
+	background: #FFFFFF;
+	height: 1330px;
 }
 .in_1{
 	height: 78px;
@@ -76,7 +93,8 @@ a{
 .in_1 .in_12{
 	font-size: 30px;
 	line-height: 78px;
-	margin: 0 216px;
+	margin: 0;
+	width: 430px;
 }
 .in_13{
 	font-size: 26px;

@@ -1,21 +1,29 @@
 <template>
-  <div>
-  	<div class="in_f"><img src="../assets/主页/31.gif"></div>
+  <div class="in">
+  	<div class="in_f"><img src="../assets/index/31.gif"></div>
   	<div class="in_1">
-  		<div class="in_11"><router-link to="/Individual"><img src="../assets/主页/6.gif"></router-link></div>
-  		<div class="in_12">二手房/租房/新房</div>
+  		<div class="in_11"><router-link to="/Individual"><img src="../assets/index/6.gif"></router-link></div>
+  		<div class="in_12">二手房 / 租房 / 新房</div>
   		<div class="in_13">好房好服务<br>找房上贝壳</div>
-  		<div class="in_14"><router-link to="/Location"><img src="../assets/主页/7.gif">长沙</router-link></div>
+  		<div class="in_14"><router-link to="/Location"><img src="../assets/index/7.gif">长沙</router-link></div>
   		<div class="in_15"><input type="text" placeholder="输入小区或商圈开始找房咯~"></div>
   	</div>
   	<div class="in_2">
-  		<div><router-link to="/secondary"><img src="../assets/主页/13.gif"></router-link><br/>
+  		<div><router-link to="/secondary">
+  			<img src="https://s1.ljcdn.com/mensa/static/m/images/home/icon_ershoufang.png?version=fasfgd8dt4">
+  		</router-link><br/>
   			<router-link to="/secondary">二手房</router-link></div>
-  		<div><router-link to="/"><img src="../assets/主页/14.gif"></router-link><br/>
+  		<div><router-link to="/">
+  			<img src="https://s1.ljcdn.com/mensa/static/m/images/home/icon_zufang.png?version=fasfgd8dt4">
+  		</router-link><br/>
   			<router-link to="/">租房</router-link></div>
-  		<div><router-link to="/"><img src="../assets/主页/15.gif"></router-link><br/>
+  		<div><router-link to="/">
+  			<img src="https://s1.ljcdn.com/mensa/static/m/images/home/icon_xinfang.png?version=fasfgd8dt4">
+  		</router-link><br/>
   			<router-link to="/">新房</router-link></div>
-  		<div><router-link to="/"><img src="../assets/主页/16.gif"></router-link><br/>
+  		<div><router-link to="/">
+  			<img src="https://s1.ljcdn.com/mensa/static/m/images/home/icon_haiwai.png?version=fasfgd8dt4">
+  		</router-link><br/>
   			<router-link to="/">海外</router-link></div>
   	</div>
   	<div class="in_3">
@@ -23,8 +31,8 @@
   		<div class="in_32">
   			<ul>
   				<li v-for="item in tools" :key="item.toolid">
-  					<router-link to="/"><img src="http://"></router-link><br/>
-  			<router-link to="/">{{item.tool}}</router-link>
+  					<router-link to="/"><img :src="item.img"><br/>
+  			{{item.tool}}</router-link>
   				</li>
   			</ul>
   		</div>
@@ -37,19 +45,14 @@
   			<span>租房</span>
   		</div>
   	</div>
-  		<div class="in_5">
-  			<router-link to="/"><img src="../assets/主页/26.gif"></router-link>
-  		<div class="in_51"><router-link to="/">客村地铁100米 广东教育学院宿舍 低层两房</router-link></div>
-  		<div class="in_52">2室1厅/51.69㎡/南/广东教育学院</div>
-  		<div class="in_53">168万<span>32502元/平</span></div>
-  		<div class="in_54"><span>满两年</span><span>地铁</span></div>
-  		</div>
-  		<div class="in_5" v-for="item in introduces" :key="item.id">
-  			<router-link to="/"><img src="https//"></router-link>
-  		<div class="in_51"><router-link to="/">{{item.describe}}</router-link></div>
-  		<div class="in_52">{{item.address}}</div>
-  		<div class="in_53">{{item.Price}}<span>{{item.UnitPrice}}</span></div>
-  		<div class="in_54"><span>{{item.Label}}</span></div>
+  		<div class="in_5" v-for="item in introduce" :key="item.id">
+  			<router-link :to="{path: 'details', query: {in:item.introduce,ad:item.address,pr:item.Price,un:item.UnitPrice,la:item.Label,imgs:item.introduceimg}}">
+  			<img :src="item.introduceimg">
+  			<div class="in_51">{{item.introduce}}</div>
+  			<div class="in_52">{{item.address}}</div>
+  			<div class="in_53">{{item.Price}}<span>{{item.UnitPrice}}</span></div>
+  			<div class="in_54"><span class="in_541">必看好房</span><span>{{item.Label}}</span><span>地铁</span></div>
+  		</router-link>
   		</div>
   </div>
 </template>
@@ -59,43 +62,72 @@ import axios from 'axios'
 export default {
 	data () {
     return {
-      tools: [],
-      introduces: []
+    	tools:{},
+    	introduce:{},
+			linkImg:[require('@/assets/index/17.gif'),require('@/assets/index/18.gif'),require('@/assets/index/19.gif'),require('@/assets/index/20.gif'),require('@/assets/index/21.gif'),require('@/assets/index/22.gif'),require('@/assets/index/23.gif'),require('@/assets/index/24.gif'),require('@/assets/index/25.gif')],
+			introImg:[require('@/assets/index/1.jpg'),require('@/assets/index/2.jpg'),require('@/assets/index/3.jpg'),require('@/assets/index/4.jpg'),require('@/assets/index/5.jpg'),require('@/assets/index/6.jpg'),require('@/assets/index/7.jpg'),require('@/assets/index/8.jpg'),require('@/assets/index/9.jpg'),require('@/assets/index/10.jpg'),require('@/assets/index/11.jpg'),require('@/assets/index/12.jpg')]
     }
   },
 	methods:{
 		postIndex(){
-			axios.get('/static/mock/index.json').then(this.toolInfo)
+			axios.post('/api/user/selectTool').then((res) => {
+        console.log(res)
+        this.tools = (res.data)
+        this.tools[0].img=this.linkImg[0]
+        this.tools[1].img=this.linkImg[1]
+        this.tools[2].img=this.linkImg[2]
+        this.tools[3].img=this.linkImg[3]
+        this.tools[4].img=this.linkImg[4]
+        this.tools[5].img=this.linkImg[5]
+        this.tools[6].img=this.linkImg[6]
+        this.tools[7].img=this.linkImg[7]
+        this.tools[8].img=this.linkImg[8]
+			})
 		},
-    toolInfo (res) {
-    	res = res.data
-    	if (res.ret && res.data) {
-        const data = res.data
-        this.tools = data.tool
-        this.introduces=data.introduce
-      }
-    }
+		postIntroduce(){
+			axios.post('/api/user/selectIntroduce').then((res) => {
+        console.log(res)
+        this.introduce = (res.data)
+        this.introduce[0].introduceimg=this.introImg[0]
+        this.introduce[1].introduceimg=this.introImg[1]
+        this.introduce[2].introduceimg=this.introImg[2]
+        this.introduce[3].introduceimg=this.introImg[3]
+        this.introduce[4].introduceimg=this.introImg[4]
+        this.introduce[5].introduceimg=this.introImg[5]
+        this.introduce[6].introduceimg=this.introImg[6]
+        this.introduce[7].introduceimg=this.introImg[7]
+        this.introduce[8].introduceimg=this.introImg[8]
+        this.introduce[9].introduceimg=this.introImg[9]
+        this.introduce[10].introduceimg=this.introImg[10]
+        this.introduce[11].introduceimg=this.introImg[11]
+			})
+		}
 	},	
 	mounted(){
-		this.postIndex()
+		this.postIndex(),
+		this.postIntroduce()
 	}
 }
 </script>
+
 <style scoped="scoped">
-.in_f{
-	position: fixed;
+	.in_f{
+		position: fixed;
 		right: 36px;
 		bottom: 112px;
 		border-radius: 50px;
 		box-shadow: 10px 10px 10px #E9EAF3;
-}
-.in_f img{
-	width: 95px;
-}
+	}
+	.in_f img{
+		width: 95px;
+	}
+	.in{
+	background: #FFFFFF;
+	}
 	.in_1{
 		width: 100%;
 		height: 465px;
-		background: url(../assets/主页/12.gif) no-repeat;
+		background: url(https://s1.ljcdn.com/mensa/static/m/images/home/head_bg.jpg?version=farfmolueg) no-repeat;
 		background-size: 100%;
 		color: #FFFFFF;
 		position: relative;
@@ -146,7 +178,7 @@ export default {
 		width: 90%;
 		border: 0;
 		border-radius: 50px;
-		background: url(../assets/主页/8.gif) #fff left 34px center no-repeat;
+		background: url(../assets/index/8.gif) #fff left 34px center no-repeat;
 		background-size: 23px;
 		box-shadow: 5px 5px 5px #E9EAF3;
 	}
@@ -181,9 +213,10 @@ export default {
 	.in_32{
 		margin-top: 20px;
 		float: left;
+		font-size: 20px;
 	}
 	.in_32 li img{
-		height: 46px;
+		height: 40px;
 	}
 	.in_4{
 		float: left;
@@ -239,6 +272,12 @@ export default {
 	.in_54{
 		color: #7d95aa;
 		font-size: 19px;
+	}
+	.in_54 .in_541{
+		padding: 3px 8px;
+		background: #222222;
+		color: #fff5c9;
+		margin-right: 14px;
 	}
 	.in_54 span{
 		padding: 3px 8px;

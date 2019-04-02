@@ -3,10 +3,7 @@
   	<common-header></common-header>
   	<div class="in_2">
   		<div class="in_21"><img src="../assets/login/5.gif"></div>
-  		<div class="in_22">
-  			<span><router-link to="/Login">登录</router-link></span>
-  			<span><router-link to="/register">注册</router-link></span>
-  		</div>
+			<div class="in_23">{{"欢迎你，"+$route.query.code}}</div>
   	</div>
   	<div class="in_3">
   		<ul>
@@ -17,6 +14,7 @@
   			<li><router-link :to="{path: 'follow', query: {code: '你还没有优惠券' }}">我的租房优惠券<img src="../assets/login/10.gif"></router-link></li>
   		</ul>
   	</div>
+  	<div class="in_4"><input type="button" value="退出登录" @click="btn"></div>
   </div>
 </template>
 
@@ -33,7 +31,16 @@ export default {
   methods: {
   	back(){
     	this.$router.go(-1);
-    }
+  	},
+  	btn(){
+  		sessionStorage.removeItem('sid');
+  		this.$router.push({
+  			path:'/Individual',
+  			query:{
+  				
+  			}
+  		});
+  	}
   }
 }
 </script>
@@ -53,7 +60,7 @@ a{
 	margin-left: 38px;
 	margin-right: 0;
 }
-.in_11 img{
+.in_11>img{
 	margin-top: 30px;
 	width: 19px;
 	margin-right: 54px;
@@ -104,7 +111,7 @@ a{
 	color: #FFFFFF;
 }
 .in_23{
-	margin-top: 20px;
+	margin-top: 40px;
 	color: #FFFFFF;
 }
 .in_3{
@@ -132,5 +139,13 @@ a{
 	margin-top: 34px;
 	margin-right: 56px;
 	width: 16px;
+}
+.in_4 input{
+	margin-top: 50px;
+	background: #FFFFFF;
+	border: 1px solid #C8C8C8;
+	height: 80px;
+	width: 720px;
+	font-size: 26px;
 }
 </style>

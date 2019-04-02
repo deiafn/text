@@ -1,16 +1,18 @@
 <template>
-  <div>
+  <div class="in">
   	<div class="in_1">
-  		<div><img src="../assets/登录注册/31.gif"></div>
-  		<div class="in_12"></div>
+  		<div><router-link to="/Individual"><img src="../assets/login/31.gif"></router-link></div>
+  		<div class="in_12">{{userHide}}</div>
   		<div class="in_13"><router-link to="/register">注册</router-link></div>
   	</div>
   	<div class="in_2">
-  		<div class="in_21">手机快捷登录</div>
+  		<div class="in_21">{{userShow}}</div>
   		<div class="in_25">未注册过的手机号将自动创建贝壳账号，经纪人不会看到您的手机号</div>
   		<form action="#">
-  		<div class="in_22"><input type="number" placeholder="请输入手机号">
-  		<input type="button" value="发送验证码"></div>
+  		<div class="in_22">
+  			<input @click="userCm" type="number" placeholder="请输入手机号">
+  			<input type="button" class="getNumber" v-model="codeMsg" @click="getCode" :disabled="codeDisabled">
+  		</div>
   		<input type="number" placeholder="请输入验证码">
   		<div class="in_23"><input type="submit" value="登录"></div>
   		</form>
@@ -24,12 +26,57 @@
 
 <script>
 export default {
+  data () {
+    return {
+		  // 是否禁用按钮
+		  codeDisabled: false,
+		  // 倒计时秒数
+		  countdown: 60,
+		  // 按钮上的文字
+		  codeMsg: '发送验证码',
+		  // 定时器
+		  timer: null,
+    	userHide:'',
+    	userShow:'手机快捷登录',
+    }
+  },
+  methods: {
+  	userCm:function(){
+  			this.userHide="账号密码登录",
+  			this.userShow=""
+  	},
+    getCode() {
+		  if (!this.timer) {
+		  	this.timer = setInterval(() => {
+		  		if (this.countdown > 0 && this.countdown <= 60) {
+		  			this.countdown--;
+		  			if (this.countdown !== 0) {
+		  				this.codeMsg = "重新发送(" + this.countdown + ")";
+		  			} else {
+		  				clearInterval(this.timer);
+		    			this.codeMsg = "获取验证码";
+		    			this.countdown = 60;
+		    			this.timer = null;
+		    			this.codeDisabled = false;
+		    		}
+		   		}
+		  	}, 1000)
+		  }
+  	}
+    
+    
+    
+  }
 }
 </script>
 <style scoped="scoped">
 a{
 		color: #2C3E50;
 	text-decoration: none;
+}
+.in{
+	background: #FFFFFF;
+	height: 1330px;
 }
 .in_1{
 	height: 78px;
@@ -43,7 +90,8 @@ a{
 .in_1 .in_12{
 	font-size: 30px;
 	line-height: 78px;
-	margin: 0 216px;
+	margin: 0;
+	width: 430px;
 }
 .in_13{
 	font-size: 26px;

@@ -1,14 +1,16 @@
 <template>
-  <div>
+  <div class="in">
   	<div class="in_1">
-  		<div><img src="../assets/登录注册/32.gif"></div>
+  		<div @click="back"><img src="../assets/login/32.gif"></div>
   		<div class="in_12">找回密码</div>
   		<div></div>
   	</div>
   	<div class="in_2">
   		<form action="#">
-  		<div class="in_21"><input type="number" placeholder="请输入手机号">
-  		<input type="button" value="发送验证码"></div>
+  		<div class="in_21">
+  			<input type="number" placeholder="请输入手机号">
+  			<input type="button" class="getNumber" v-model="codeMsg" @click="getCode" :disabled="codeDisabled">
+  		</div>
   		<div class="in_22"><input type="number" placeholder="请输入验证码"></div>
   		<div class="in_22"><input type="text" placeholder="请输入新密码（最少8位，数字+字母）"></div>
   		<div class="in_23"><input type="submit" value="提交"></div>
@@ -22,12 +24,54 @@
 
 <script>
 export default {
+  data () {
+    return {
+		  // 是否禁用按钮
+		  codeDisabled: false,
+		  // 倒计时秒数
+		  countdown: 60,
+		  // 按钮上的文字
+		  codeMsg: '发送验证码',
+		  // 定时器
+		  timer: null
+    }
+  },
+  methods: {
+    back(){
+    	this.$router.go(-1);
+    },
+    getCode() {
+		  if (!this.timer) {
+		  	this.timer = setInterval(() => {
+		  		if (this.countdown > 0 && this.countdown <= 60) {
+		  			this.countdown--;
+		  			if (this.countdown !== 0) {
+		  				this.codeMsg = "重新发送(" + this.countdown + ")";
+		  			} else {
+		  				clearInterval(this.timer);
+		    			this.codeMsg = "获取验证码";
+		    			this.countdown = 60;
+		    			this.timer = null;
+		    			this.codeDisabled = false;
+		    		}
+		   		}
+		  	}, 1000)
+		  }
+  	}
+    
+    
+    
+  }
 }
 </script>
 <style scoped="scoped">
 a{
 		color: #2C3E50;
 	text-decoration: none;
+}
+.in{
+	background: #FFFFFF;
+	height: 1330px;
 }
 .in_1{
 	height: 78px;
@@ -41,7 +85,8 @@ a{
 .in_1 .in_12{
 	font-size: 30px;
 	line-height: 78px;
-	margin: 0 216px;
+	margin: 0;
+	width: 430px;
 }
 .in_2 input{
 	height: 106px;
